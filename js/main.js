@@ -5,15 +5,21 @@ let total = 0;
 //#Displays other input when other is selected, else clears and hides othertitle field
 $('#title').change(function (e){
   if(e.target.value === "other"){
-    if($('#other-title').length === 0){
-      $('#title').after('<input type="text" id="other-title" placeholder="Your Job Role">');
-    }else {
       $('#other-title').show();
-    }
   }else {
     $('#other-title').val("");
     $('#other-title').hide();
   }
+});
+
+//Name validation check
+$('#name').keyup(function (e){
+  if($('#name').val().length === 0){
+    nameVal.blank = false;
+  }else {
+    nameVal.blank = true;
+  }
+  validateName();
 });
 
 //T-Shirt
@@ -116,6 +122,14 @@ $('.activities input').change(function(e){
                   break;
           }
       }
+
+      if (total === 0){
+        activitiesVal.blank = false;
+      }else{
+        activitiesVal.blank = true;
+      }
+
+      validateActivities();
   });
 
   if($('#total').length === 0)
@@ -144,8 +158,6 @@ $('#payment').change(function(e){
       $('#credit-card').next().hide();
       $('#credit-card').next().next().show();
       break;
-    default:
-
   }
 });
 
@@ -154,6 +166,8 @@ $('#payment').change(function(e){
 //#disables initial select payment method option and payment sections
 $(document).ready(function (){
   $('#name').focus();
+
+  $('#other-title').hide();
 
   $('label[for=color]').hide();
   $('#color').hide();
