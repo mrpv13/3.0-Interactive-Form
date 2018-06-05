@@ -12,7 +12,8 @@ $('#title').change(function (e){
   }
 });
 
-//Name validation check
+//Name
+//#Name validation check on keyup (realtime check)
 $('#name').keyup(function (e){
   if($('#name').val().length === 0){
     nameVal.blank = false;
@@ -20,6 +21,26 @@ $('#name').keyup(function (e){
     nameVal.blank = true;
   }
   validateName();
+});
+
+//Email
+//#email validation check on keyup (realtime check)
+$('#mail').keyup(function (e){
+  if($('#mail').val().length === 0){
+    emailVal.blank = false;
+  }else {
+    emailVal.blank = true;
+  }
+
+  const valEmail = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+
+  if(valEmail.test($('#mail').val())){
+    emailVal.email = true;
+  }else {
+    emailVal.email = false;
+  }
+
+  validateEmail();
 });
 
 //T-Shirt
@@ -53,6 +74,7 @@ $('#design').change(function (e){
 //Activities
 //#enables and disables options based on availability and options picked
 //#calculates total
+//#validates on change
 $('.activities input').change(function(e){
   if ($(this).prop('name') === "js-frameworks"){
       $('.activities input').each(function () {
@@ -147,18 +169,82 @@ $('#payment').change(function(e){
       $('#credit-card').show();
       $('#credit-card').next().hide();
       $('#credit-card').next().next().hide();
+      checkCC();
       break;
     case 'paypal':
       $('#credit-card').hide();
       $('#credit-card').next().show();
       $('#credit-card').next().next().hide();
+      ccVal.notCC();
       break;
     case 'bitcoin':
       $('#credit-card').hide();
       $('#credit-card').next().hide();
       $('#credit-card').next().next().show();
+      ccVal.notCC();
       break;
   }
+
+
+
+});
+
+//Payment - CC fields
+//#validation checks for cc number, zip, and cvv
+const checkCC = () => {
+    checkCCnum();
+    checkZIP();
+    checkCVV();
+}
+
+const checkCCnum = () => {
+  let ccnum = $('#cc-num').val();
+  if(ccnum === ""){
+    ccVal.blank = false;
+  }else{
+    ccVal.blank = true;
+  }
+
+  if(ccnum.length >= 13 && ccnum.length <= 16 && /^\d+$/.test(ccnum)){
+    ccVal.cc = true;
+  }else {
+    ccVal.cc = false;
+  }
+}
+
+const checkZIP = () => {
+  let ccnum = $('#zip').val();
+
+  if(ccnum.length === 5 && /^\d+$/.test(ccnum)){
+    ccVal.zip = true;
+  }else {
+    ccVal.zip = false;
+  }
+}
+
+const checkCVV = () => {
+  let ccnum = $('#cvv').val();
+
+  if(ccnum.length === 3 && /^\d+$/.test(ccnum)){
+    ccVal.cvv = true;
+  }else {
+    ccVal.cvv = false;
+  }
+}
+
+$('#cc-num').keyup(function (e){
+  checkCCnum();
+  validateCC();
+});
+
+$('#zip').keyup(function (e){
+  checkZIP();
+  validateCC();
+});
+
+$('#cvv').keyup(function (e){
+  checkCVV();
+  validateCC();
 });
 
 //#Focus name field on load
